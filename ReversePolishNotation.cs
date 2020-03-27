@@ -73,22 +73,13 @@ namespace Programowanie2
             sBuffer = Regex.Replace(sBuffer, "(?<alpha>(pi|e|sin|cos|tan))", " ${alpha} ");     //pi, e, sin, cos, tan
             sBuffer = Regex.Replace(sBuffer, @"\s+", " ").Trim();                               // trims up consecutive spaces and replace it with one space
 
-            // The following chunk captures unary minus operations.
-            // 1) We replace every minus sign with the string "MINUS".
-            // 2) Then if we find a "MINUS" with a number or constant in front, then it's a normal minus operation.
-            // 3) Otherwise, it's a unary minus operation.
-
-            // Step 1.
             sBuffer = Regex.Replace(sBuffer, "-", "MINUS");
-            // Step 2. Looking for pi or e or generic number \d+(\.\d+)?
             sBuffer = Regex.Replace(sBuffer, @"(?<number>(pi|e|(\d+(\.\d+)?)))\s+MINUS", "${number} -");
-            // Step 3. Use the tilde ~ as the unary minus operator
             sBuffer = Regex.Replace(sBuffer, "MINUS", "~");
 
             sTransitionExpression = sBuffer;
 
             //TOKEN
-
             string[] saParsed = sBuffer.Split(" ".ToCharArray());
             int i = 0;
             double tokenvalue;
@@ -169,13 +160,8 @@ namespace Programowanie2
                                         break;
                                     }
                                     else
-                                    {
-                                        // Once we're in here, the following algorithm condition is satisfied.
-                                        // o1 is associative or left-associative and its precedence is less than (lower precedence) or equal to that of o2, or
-                                        // o1 is right-associative and its precedence is less than (lower precedence) that of o2,
-
-                                        // pop o2 off the stack, onto the output queue;
-                                        output.Enqueue(ops.Pop());
+                                    {   
+                                        output.Enqueue(ops.Pop()); // pop o2 off the stack, onto the output queue
                                         if (ops.Count > 0)
                                         {
                                             opstoken = (ReversePolishNotationToken)ops.Peek();
@@ -187,29 +173,24 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            // push o1 onto the operator stack.
-                            ops.Push(token);
+                            
+                            ops.Push(token); // push o1 onto the operator stack
                             break;
                         case "/":
                             token.TokenValueType = TokenType.Divide;
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                // while there is an operator, o2, at the top of the stack
-                                while (IsOperatorToken(opstoken.TokenValueType))
+                                
+                                while (IsOperatorToken(opstoken.TokenValueType)) // while there is an operator, o2, at the top of the stack
                                 {
                                     if (opstoken.TokenValueType == TokenType.Plus || opstoken.TokenValueType == TokenType.Minus)
                                     {
                                         break;
                                     }
                                     else
-                                    {
-                                        // Once we're in here, the following algorithm condition is satisfied.
-                                        // o1 is associative or left-associative and its precedence is less than (lower precedence) or equal to that of o2, or
-                                        // o1 is right-associative and its precedence is less than (lower precedence) that of o2,
-
-                                        // pop o2 off the stack, onto the output queue;
-                                        output.Enqueue(ops.Pop());
+                                    { 
+                                        output.Enqueue(ops.Pop()); // pop o2 off the stack, onto the output queue;
                                         if (ops.Count > 0)
                                         {
                                             opstoken = (ReversePolishNotationToken)ops.Peek();
@@ -221,106 +202,95 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            // push o1 onto the operator stack.
-                            ops.Push(token);
+                            
+                            ops.Push(token);    // push o1 onto the operator stack.
                             break;
                         case "^":
                             token.TokenValueType = TokenType.Exponent;
-                            // push o1 onto the operator stack.
-                            ops.Push(token);
+                            
+                            ops.Push(token);    // push o1 onto the operator stack.
                             break;
                         case "~":
                             token.TokenValueType = TokenType.UnaryMinus;
-                            // push o1 onto the operator stack.
-                            ops.Push(token);
+                            
+                            ops.Push(token); // push o1 onto the operator stack.
                             break;
                         case "(":
                             token.TokenValueType = TokenType.LeftParenthesis;
-                            // If the token is a left parenthesis, then push it onto the stack.
-                            ops.Push(token);
+                            
+                            ops.Push(token); // If the token is a left parenthesis, then push it onto the stack.
                             break;
                         case ")":
                             token.TokenValueType = TokenType.RightParenthesis;
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                // Until the token at the top of the stack is a left parenthesis
-                                while (opstoken.TokenValueType != TokenType.LeftParenthesis)
+                                
+                                while (opstoken.TokenValueType != TokenType.LeftParenthesis) // Until the token at the top of the stack is a left parenthesis
                                 {
-                                    // pop operators off the stack onto the output queue
-                                    output.Enqueue(ops.Pop());
+                                    
+                                    output.Enqueue(ops.Pop()); // pop operators off the stack onto the output queue
                                     if (ops.Count > 0)
                                     {
                                         opstoken = (ReversePolishNotationToken)ops.Peek();
                                     }
                                     else
                                     {
-                                        // If the stack runs out without finding a left parenthesis,
-                                        // then there are mismatched parentheses.
-                                        throw new Exception("Unbalanced parenthesis!");
+                                        throw new Exception("Unbalanced parenthesis!"); // If the stack runs out without finding a left parenthesis, then there are mismatched parentheses.
                                     }
 
                                 }
-                                // Pop the left parenthesis from the stack, but not onto the output queue.
-                                ops.Pop();
+                                
+                                ops.Pop(); // Pop the left parenthesis from the stack, but not onto the output queue.
                             }
 
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                // If the token at the top of the stack is a function token
-                                if (IsFunctionToken(opstoken.TokenValueType))
+                                
+                                if (IsFunctionToken(opstoken.TokenValueType)) // If the token at the top of the stack is a function token
                                 {
-                                    // pop it and onto the output queue.
-                                    output.Enqueue(ops.Pop());
+                                    
+                                    output.Enqueue(ops.Pop()); // pop it and onto the output queue.
                                 }
                             }
                             break;
                         case "pi":
                             token.TokenValueType = TokenType.Constant;
-                            // If the token is a number, then add it to the output queue.
-                            output.Enqueue(token);
+                            output.Enqueue(token);  // If the token is a number, then add it to the output queue.
                             break;
                         case "e":
                             token.TokenValueType = TokenType.Constant;
-                            // If the token is a number, then add it to the output queue.
-                            output.Enqueue(token);
+                            output.Enqueue(token); // If the token is a number, then add it to the output queue.
                             break;
                         case "sin":
                             token.TokenValueType = TokenType.Sine;
-                            // If the token is a function token, then push it onto the stack.
-                            ops.Push(token);
+                            ops.Push(token); // If the token is a function token, then push it onto the stack.
                             break;
                         case "cos":
                             token.TokenValueType = TokenType.Cosine;
-                            // If the token is a function token, then push it onto the stack.
-                            ops.Push(token);
+                            ops.Push(token);  // If the token is a function token, then push it onto the stack.
                             break;
                         case "tan":
                             token.TokenValueType = TokenType.Tangent;
-                            // If the token is a function token, then push it onto the stack.
-                            ops.Push(token);
+                            ops.Push(token); // If the token is a function token, then push it onto the stack.
                             break;
                     }
                 }
             }
 
-            // When there are no more tokens to read:
-
-            // While there are still operator tokens in the stack:
-            while (ops.Count != 0)
+            
+            while (ops.Count != 0) // While there are still operator tokens in the stack:
             {
                 opstoken = (ReversePolishNotationToken)ops.Pop();
-                // If the operator token on the top of the stack is a parenthesis
-                if (opstoken.TokenValueType == TokenType.LeftParenthesis)
+                
+                if (opstoken.TokenValueType == TokenType.LeftParenthesis) // If the operator token on the top of the stack is a parenthesis
                 {
-                    // then there are mismatched parenthesis.
-                    throw new Exception("Unbalanced parenthesis!");
+                    throw new Exception("Unbalanced parenthesis!"); // then there are mismatched parenthesis.
                 }
                 else
                 {
-                    // Pop the operator onto the output queue.
-                    output.Enqueue(opstoken);
+                    output.Enqueue(opstoken);  // Pop the operator onto the output queue.
                 }
             }
 
