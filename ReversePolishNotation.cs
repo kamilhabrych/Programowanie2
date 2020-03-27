@@ -67,20 +67,15 @@ namespace Programowanie2
             sOriginalExpression = Expression;
 
             string sBuffer = Expression.ToLower();
-            // captures numbers. Anything like 11 or 22.34 is captured
-            sBuffer = Regex.Replace(sBuffer, @"(?<number>\d+(\.\d+)?)", " ${number} ");
-            // captures these symbols: + - * / ^ ( )
-            sBuffer = Regex.Replace(sBuffer, @"(?<ops>[+\-*/^()])", " ${ops} ");
-            // captures alphabets. Currently captures the two math constants PI and E,
-            // and the 3 basic trigonometry functions, sine, cosine and tangent
-            sBuffer = Regex.Replace(sBuffer, "(?<alpha>(pi|e|sin|cos|tan))", " ${alpha} ");
-            // trims up consecutive spaces and replace it with just one space
-            sBuffer = Regex.Replace(sBuffer, @"\s+", " ").Trim();
+            
+            sBuffer = Regex.Replace(sBuffer, @"(?<number>\d+(\.\d+)?)", " ${number} ");         //numbers
+            sBuffer = Regex.Replace(sBuffer, @"(?<ops>[+\-*/^()])", " ${ops} ");                //symbols
+            sBuffer = Regex.Replace(sBuffer, "(?<alpha>(pi|e|sin|cos|tan))", " ${alpha} ");     //pi, e, sin, cos, tan
+            sBuffer = Regex.Replace(sBuffer, @"\s+", " ").Trim();                               // trims up consecutive spaces and replace it with one space
 
             // The following chunk captures unary minus operations.
             // 1) We replace every minus sign with the string "MINUS".
-            // 2) Then if we find a "MINUS" with a number or constant in front,
-            //    then it's a normal minus operation.
+            // 2) Then if we find a "MINUS" with a number or constant in front, then it's a normal minus operation.
             // 3) Otherwise, it's a unary minus operation.
 
             // Step 1.
@@ -92,7 +87,8 @@ namespace Programowanie2
 
             sTransitionExpression = sBuffer;
 
-            // tokenise it!
+            //TOKEN
+
             string[] saParsed = sBuffer.Split(" ".ToCharArray());
             int i = 0;
             double tokenvalue;
@@ -107,8 +103,8 @@ namespace Programowanie2
                 {
                     tokenvalue = double.Parse(saParsed[i]);
                     token.TokenValueType = TokenType.Number;
-                    // If the token is a number, then add it to the output queue.
-                    output.Enqueue(token);
+
+                    output.Enqueue(token);      // If the token is a number, then add it to the output queue.
                 }
                 catch
                 {
@@ -119,11 +115,11 @@ namespace Programowanie2
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                // while there is an operator, o2, at the top of the stack
-                                while (IsOperatorToken(opstoken.TokenValueType))
+                               
+                                while (IsOperatorToken(opstoken.TokenValueType))        // while there is an operator, o2, at the top of the stack
                                 {
-                                    // pop o2 off the stack, onto the output queue;
-                                    output.Enqueue(ops.Pop());
+                                    
+                                    output.Enqueue(ops.Pop());      // pop o2 off the stack, onto the output queue;
                                     if (ops.Count > 0)
                                     {
                                         opstoken = (ReversePolishNotationToken)ops.Peek();
@@ -134,19 +130,19 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            // push o1 onto the operator stack.
-                            ops.Push(token);
+                            
+                            ops.Push(token);        // push o1 onto the operator stack
                             break;
                         case "-":
                             token.TokenValueType = TokenType.Minus;
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                // while there is an operator, o2, at the top of the stack
-                                while (IsOperatorToken(opstoken.TokenValueType))
+                                
+                                while (IsOperatorToken(opstoken.TokenValueType))        // while there is an operator, o2, at the top of the stack
                                 {
-                                    // pop o2 off the stack, onto the output queue;
-                                    output.Enqueue(ops.Pop());
+                                    
+                                    output.Enqueue(ops.Pop());      // pop o2 off the stack, onto the output queue;
                                     if (ops.Count > 0)
                                     {
                                         opstoken = (ReversePolishNotationToken)ops.Peek();
@@ -157,16 +153,16 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            // push o1 onto the operator stack.
-                            ops.Push(token);
+                            
+                            ops.Push(token);        // push o1 onto the operator stack
                             break;
                         case "*":
                             token.TokenValueType = TokenType.Multiply;
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                // while there is an operator, o2, at the top of the stack
-                                while (IsOperatorToken(opstoken.TokenValueType))
+                                
+                                while (IsOperatorToken(opstoken.TokenValueType))        // while there is an operator, o2, at the top of the stack
                                 {
                                     if (opstoken.TokenValueType == TokenType.Plus || opstoken.TokenValueType == TokenType.Minus)
                                     {
