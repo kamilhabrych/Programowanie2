@@ -16,9 +16,9 @@ namespace Programowanie2
         Divide,
         Exponent,
         UnaryMinus,
-        Sine,
-        Cosine,
-        Tangent,
+        Sin,
+        Cos,
+        Tan,
         LeftParenthesis,
         RightParenthesis
     }
@@ -264,15 +264,15 @@ namespace Programowanie2
                             output.Enqueue(token); // If the token is a number, then add it to the output queue.
                             break;
                         case "sin":
-                            token.TokenValueType = TokenType.Sine;
+                            token.TokenValueType = TokenType.Sin;
                             ops.Push(token); // If the token is a function token, then push it onto the stack.
                             break;
                         case "cos":
-                            token.TokenValueType = TokenType.Cosine;
+                            token.TokenValueType = TokenType.Cos;
                             ops.Push(token);  // If the token is a function token, then push it onto the stack.
                             break;
                         case "tan":
-                            token.TokenValueType = TokenType.Tangent;
+                            token.TokenValueType = TokenType.Tan;
                             ops.Push(token); // If the token is a function token, then push it onto the stack.
                             break;
                     }
@@ -307,11 +307,9 @@ namespace Programowanie2
             Stack result = new Stack();
             double oper1 = 0.0, oper2 = 0.0;
             ReversePolishNotationToken token = new ReversePolishNotationToken();
-            // While there are input tokens left
-            foreach (object obj in output)
+            foreach (object obj in output) // While there are input tokens left
             {
-                // Read the next token from input.
-                token = (ReversePolishNotationToken)obj;
+                token = (ReversePolishNotationToken)obj; // Read the next token from input.
                 switch (token.TokenValueType)
                 {
                     case TokenType.Number:
@@ -325,7 +323,7 @@ namespace Programowanie2
                         result.Push(EvaluateConstant(token.TokenValue));
                         break;
                     case TokenType.Plus:
-                        // NOTE: n is 2 in this case
+                        // n is 2 in this case
                         // If there are fewer than n values on the stack
                         if (result.Count >= 2)
                         {
@@ -343,153 +341,111 @@ namespace Programowanie2
                         }
                         break;
                     case TokenType.Minus:
-                        // NOTE: n is 2 in this case
-                        // If there are fewer than n values on the stack
                         if (result.Count >= 2)
                         {
-                            // So, pop the top n values from the stack.
                             oper2 = (double)result.Pop();
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+                           
                             result.Push(oper1 - oper2);
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
                     case TokenType.Multiply:
-                        // NOTE: n is 2 in this case
-                        // If there are fewer than n values on the stack
                         if (result.Count >= 2)
                         {
-                            // So, pop the top n values from the stack.
                             oper2 = (double)result.Pop();
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+
                             result.Push(oper1 * oper2);
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
                     case TokenType.Divide:
-                        // NOTE: n is 2 in this case
-                        // If there are fewer than n values on the stack
                         if (result.Count >= 2)
                         {
-                            // So, pop the top n values from the stack.
                             oper2 = (double)result.Pop();
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+                        
                             result.Push(oper1 / oper2);
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
                     case TokenType.Exponent:
-                        // NOTE: n is 2 in this case
-                        // If there are fewer than n values on the stack
                         if (result.Count >= 2)
                         {
-                            // So, pop the top n values from the stack.
                             oper2 = (double)result.Pop();
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+
                             result.Push(Math.Pow(oper1, oper2));
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
                     case TokenType.UnaryMinus:
-                        // NOTE: n is 1 in this case
-                        // If there are fewer than n values on the stack
                         if (result.Count >= 1)
                         {
-                            // So, pop the top n values from the stack.
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+
                             result.Push(-oper1);
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
-                    case TokenType.Sine:
-                        // NOTE: n is 1 in this case
-                        // If there are fewer than n values on the stack
+                    case TokenType.Sin:
                         if (result.Count >= 1)
                         {
-                            // So, pop the top n values from the stack.
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+
                             result.Push(Math.Sin(oper1));
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
-                    case TokenType.Cosine:
-                        // NOTE: n is 1 in this case
-                        // If there are fewer than n values on the stack
+                    case TokenType.Cos:
                         if (result.Count >= 1)
                         {
-                            // So, pop the top n values from the stack.
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+                            
                             result.Push(Math.Cos(oper1));
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
-                    case TokenType.Tangent:
-                        // NOTE: n is 1 in this case
-                        // If there are fewer than n values on the stack
+                    case TokenType.Tan:
                         if (result.Count >= 1)
                         {
-                            // So, pop the top n values from the stack.
                             oper1 = (double)result.Pop();
-                            // Evaluate the function, with the values as arguments.
-                            // Push the returned results, if any, back onto the stack.
+                            
                             result.Push(Math.Tan(oper1));
                         }
                         else
                         {
-                            // (Error) The user has not input sufficient values in the expression.
                             throw new Exception("Evaluation error!");
                         }
                         break;
                 }
             }
 
-            // If there is only one value in the stack
             if (result.Count == 1)
             {
-                // That value is the result of the calculation.
-                return (double)result.Pop();
+                return (double)result.Pop(); // That value is the result of the calculation.
             }
             else
             {
@@ -524,9 +480,9 @@ namespace Programowanie2
             bool result = false;
             switch (t)
             {
-                case TokenType.Sine:
-                case TokenType.Cosine:
-                case TokenType.Tangent:
+                case TokenType.Sin:
+                case TokenType.Cos:
+                case TokenType.Tan:
                     result = true;
                     break;
                 default:
