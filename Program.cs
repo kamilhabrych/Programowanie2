@@ -15,7 +15,6 @@ namespace Programowanie2
             Console.WriteLine("tran:   {0}", rpn.TransitionExpression);
             Console.WriteLine("post:   {0}", rpn.PostfixExpression);
             Console.WriteLine("result: {0}", result);
-            Console.ReadLine();
         }
     }
 }
