@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Programowanie2
 {
@@ -90,7 +92,7 @@ namespace Programowanie2
 
             sBuffer = Regex.Replace(sBuffer, @"(?<number>\d+(\.\d+)?)", " ${number} ");                     //numbers
             sBuffer = Regex.Replace(sBuffer, @"(?<ops>[+\-*/^()])", " ${ops} ");                            //symbols
-            sBuffer = Regex.Replace(sBuffer, "(?<alpha>(x|asin|sinh|acos|cosh|atan|tanh|pi|e|sin|cos|tan|abs|exp|log|sqrt))", " ${alpha} ");       //functions and x
+            sBuffer = Regex.Replace(sBuffer, "(?<alpha>(exp|asin|sinh|acos|cosh|atan|tanh|pi|e|sin|cos|tan|abs|log|sqrt))", " ${alpha} ");       //functions and x
             sBuffer = Regex.Replace(sBuffer, @"\s+", " ").Trim();                                           // trims up consecutive spaces and replace it with one space
 
             sBuffer = Regex.Replace(sBuffer, "-", "MINUS");
@@ -669,6 +671,16 @@ namespace Programowanie2
                 case TokenType.Sin:
                 case TokenType.Cos:
                 case TokenType.Tan:
+                case TokenType.Exp:
+                case TokenType.Abs:
+                case TokenType.Log:
+                case TokenType.Sqrt:
+                case TokenType.Cosh:
+                case TokenType.Sinh:
+                case TokenType.Tanh:
+                case TokenType.Acos:
+                case TokenType.Asin:
+                case TokenType.Atan:
                     result = true;
                     break;
                 default:
@@ -693,19 +705,16 @@ namespace Programowanie2
             return result;
         }
 
-    public static void CalculateRange(List<string> Range, double x, double xMin, double xMax, int n) //calculate range between xMin and xMax
+    public void CalculateRange(double xMin, double xMax, int n) //calculate range between xMin and xMax
         {
-            System.Console.WriteLine("{0}", CalculateRange(Range, x));
-
             double result = 0;
             double length = (xMax - xMin) / (n - 1);
-            x = xMin;
-
+            sVariableX = xMin;
             for (int i = 0; i < n; i++)
             {
-                result = CalculateRange(Range, x);
-                System.Console.WriteLine("{0} => {1}", String.Format("{0:0.##}", x), result);
-                x += length;
+                result = Evaluate();
+                System.Console.WriteLine("{0} => {1}", String.Format("{0:0.##}", sVariableX), result);
+                sVariableX += length;
             }
         }
     }

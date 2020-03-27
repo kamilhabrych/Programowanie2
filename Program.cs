@@ -9,13 +9,14 @@ namespace Programowanie2
         {
             double result = 0.0;
             Programowanie2.ReversePolishNotation rpn = new Programowanie2.ReversePolishNotation();
-            rpn.Parse("3*(x+2)-10/12*5");
-            rpn.VariableX = 2;
+            rpn.Parse(args[0]);
+            rpn.VariableX = Convert.ToDouble(args[1]);
             result = rpn.Evaluate();
 
-            Console.WriteLine("Infix:  \t{0}", rpn.TransitionExpression);
-            Console.WriteLine("Postfix:\t{0}", rpn.PostfixExpression);
+            Console.WriteLine("{0}", rpn.TransitionExpression);
+            Console.WriteLine("{0}", rpn.PostfixExpression);
             Console.WriteLine(result);
+            rpn.CalculateRange(Convert.ToDouble(args[2]),Convert.ToDouble(args[3]),Convert.ToInt32(args[4]));
         }
     }
 }
