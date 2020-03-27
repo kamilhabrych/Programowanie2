@@ -14,7 +14,7 @@ namespace Programowanie2
 
             Console.WriteLine("Original:   {0}", rpn.OriginalExpression);
             Console.WriteLine("Postfix:   {0}", rpn.PostfixExpression);
-            Console.WriteLine("Result: {0}", result);
+            Console.WriteLine(result);
         }
     }
 }
