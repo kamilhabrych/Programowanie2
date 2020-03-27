@@ -1,0 +1,8 @@
+{
+    "liveshare.allowGuestDebugControl": true,
+    "liveshare.allowGuestTaskControl": true,
+    "cSpell.ignoreWords": [
+        "xmax",
+        "xmin"
+    ]
+}

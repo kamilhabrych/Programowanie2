@@ -19,8 +19,21 @@ namespace Programowanie2
         Sin,
         Cos,
         Tan,
+        Abs,
+        Exp,
+        Log,
+        Sqrt,
+        Cosh,
+        Sinh,
+        Tanh,
+        Acos,
+        Asin,
+        Atan,
+        Pi,
+        E,
         LeftParenthesis,
-        RightParenthesis
+        RightParenthesis,
+        Variable
     }
 
     public struct ReversePolishNotationToken
@@ -52,6 +65,13 @@ namespace Programowanie2
             get { return sPostfixExpression; }
         }
 
+        private double sVariableX;
+        public double VariableX
+        {
+            get { return sVariableX; }
+            set { sVariableX = value; }
+        }
+
         public ReversePolishNotation()
         {
             sOriginalExpression = string.Empty;
@@ -67,14 +87,14 @@ namespace Programowanie2
             sOriginalExpression = Expression;
 
             string sBuffer = Expression.ToLower();
-            
-            sBuffer = Regex.Replace(sBuffer, @"(?<number>\d+(\.\d+)?)", " ${number} ");         //numbers
-            sBuffer = Regex.Replace(sBuffer, @"(?<ops>[+\-*/^()])", " ${ops} ");                //symbols
-            sBuffer = Regex.Replace(sBuffer, "(?<alpha>(pi|e|sin|cos|tan))", " ${alpha} ");     //pi, e, sin, cos, tan
-            sBuffer = Regex.Replace(sBuffer, @"\s+", " ").Trim();                               // trims up consecutive spaces and replace it with one space
+
+            sBuffer = Regex.Replace(sBuffer, @"(?<number>\d+(\.\d+)?)", " ${number} ");                     //numbers
+            sBuffer = Regex.Replace(sBuffer, @"(?<ops>[+\-*/^()])", " ${ops} ");                            //symbols
+            sBuffer = Regex.Replace(sBuffer, "(?<alpha>(x|asin|sinh|acos|cosh|atan|tanh|pi|e|sin|cos|tan|abs|exp|log|sqrt))", " ${alpha} ");       //functions and x
+            sBuffer = Regex.Replace(sBuffer, @"\s+", " ").Trim();                                           // trims up consecutive spaces and replace it with one space
 
             sBuffer = Regex.Replace(sBuffer, "-", "MINUS");
-            sBuffer = Regex.Replace(sBuffer, @"(?<number>(pi|e|(\d+(\.\d+)?)))\s+MINUS", "${number} -");
+            sBuffer = Regex.Replace(sBuffer, @"(?<number>(pi|e|([)]|\d+(\.\d+)?)))\s+MINUS", "${number} -");
             sBuffer = Regex.Replace(sBuffer, "MINUS", "~");
 
             sTransitionExpression = sBuffer;
@@ -106,10 +126,10 @@ namespace Programowanie2
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                               
+
                                 while (IsOperatorToken(opstoken.TokenValueType))        // while there is an operator, o2, at the top of the stack
                                 {
-                                    
+
                                     output.Enqueue(ops.Pop());      // pop o2 off the stack, onto the output queue;
                                     if (ops.Count > 0)
                                     {
@@ -121,7 +141,7 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            
+
                             ops.Push(token);        // push o1 onto the operator stack
                             break;
                         case "-":
@@ -129,10 +149,10 @@ namespace Programowanie2
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                
+
                                 while (IsOperatorToken(opstoken.TokenValueType))        // while there is an operator, o2, at the top of the stack
                                 {
-                                    
+
                                     output.Enqueue(ops.Pop());      // pop o2 off the stack, onto the output queue;
                                     if (ops.Count > 0)
                                     {
@@ -144,7 +164,7 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            
+
                             ops.Push(token);        // push o1 onto the operator stack
                             break;
                         case "*":
@@ -152,7 +172,7 @@ namespace Programowanie2
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                
+
                                 while (IsOperatorToken(opstoken.TokenValueType))        // while there is an operator, o2, at the top of the stack
                                 {
                                     if (opstoken.TokenValueType == TokenType.Plus || opstoken.TokenValueType == TokenType.Minus)
@@ -160,7 +180,7 @@ namespace Programowanie2
                                         break;
                                     }
                                     else
-                                    {   
+                                    {
                                         output.Enqueue(ops.Pop()); // pop o2 off the stack, onto the output queue
                                         if (ops.Count > 0)
                                         {
@@ -173,7 +193,7 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            
+
                             ops.Push(token); // push o1 onto the operator stack
                             break;
                         case "/":
@@ -181,7 +201,7 @@ namespace Programowanie2
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                
+
                                 while (IsOperatorToken(opstoken.TokenValueType)) // while there is an operator, o2, at the top of the stack
                                 {
                                     if (opstoken.TokenValueType == TokenType.Plus || opstoken.TokenValueType == TokenType.Minus)
@@ -189,7 +209,7 @@ namespace Programowanie2
                                         break;
                                     }
                                     else
-                                    { 
+                                    {
                                         output.Enqueue(ops.Pop()); // pop o2 off the stack, onto the output queue;
                                         if (ops.Count > 0)
                                         {
@@ -202,22 +222,22 @@ namespace Programowanie2
                                     }
                                 }
                             }
-                            
+
                             ops.Push(token);    // push o1 onto the operator stack.
                             break;
                         case "^":
                             token.TokenValueType = TokenType.Exponent;
-                            
+
                             ops.Push(token);    // push o1 onto the operator stack.
                             break;
                         case "~":
                             token.TokenValueType = TokenType.UnaryMinus;
-                            
+
                             ops.Push(token); // push o1 onto the operator stack.
                             break;
                         case "(":
                             token.TokenValueType = TokenType.LeftParenthesis;
-                            
+
                             ops.Push(token); // If the token is a left parenthesis, then push it onto the stack.
                             break;
                         case ")":
@@ -225,10 +245,10 @@ namespace Programowanie2
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                
+
                                 while (opstoken.TokenValueType != TokenType.LeftParenthesis) // Until the token at the top of the stack is a left parenthesis
                                 {
-                                    
+
                                     output.Enqueue(ops.Pop()); // pop operators off the stack onto the output queue
                                     if (ops.Count > 0)
                                     {
@@ -240,50 +260,93 @@ namespace Programowanie2
                                     }
 
                                 }
-                                
+
                                 ops.Pop(); // Pop the left parenthesis from the stack, but not onto the output queue.
                             }
 
                             if (ops.Count > 0)
                             {
                                 opstoken = (ReversePolishNotationToken)ops.Peek();
-                                
+
                                 if (IsFunctionToken(opstoken.TokenValueType)) // If the token at the top of the stack is a function token
                                 {
-                                    
+
                                     output.Enqueue(ops.Pop()); // pop it and onto the output queue.
                                 }
                             }
                             break;
+                        case "x":
+                            token.TokenValueType = TokenType.Variable;
+                            output.Enqueue(token);
+                            break;
                         case "pi":
                             token.TokenValueType = TokenType.Constant;
-                            output.Enqueue(token);  // If the token is a number, then add it to the output queue.
+                            output.Enqueue(token);
                             break;
                         case "e":
                             token.TokenValueType = TokenType.Constant;
-                            output.Enqueue(token); // If the token is a number, then add it to the output queue.
+                            output.Enqueue(token);
                             break;
                         case "sin":
                             token.TokenValueType = TokenType.Sin;
-                            ops.Push(token); // If the token is a function token, then push it onto the stack.
+                            ops.Push(token);
                             break;
                         case "cos":
                             token.TokenValueType = TokenType.Cos;
-                            ops.Push(token);  // If the token is a function token, then push it onto the stack.
+                            ops.Push(token);
                             break;
                         case "tan":
                             token.TokenValueType = TokenType.Tan;
-                            ops.Push(token); // If the token is a function token, then push it onto the stack.
+                            ops.Push(token);
+                            break;
+                        case "abs":
+                            token.TokenValueType = TokenType.Abs;
+                            ops.Push(token);
+                            break;
+                        case "exp":
+                            token.TokenValueType = TokenType.Exp;
+                            ops.Push(token);
+                            break;
+                        case "log":
+                            token.TokenValueType = TokenType.Log;
+                            ops.Push(token);
+                            break;
+                        case "sqrt":
+                            token.TokenValueType = TokenType.Sqrt;
+                            ops.Push(token);
+                            break;
+                        case "cosh":
+                            token.TokenValueType = TokenType.Cosh;
+                            ops.Push(token);
+                            break;
+                        case "sinh":
+                            token.TokenValueType = TokenType.Sinh;
+                            ops.Push(token);
+                            break;
+                        case "tanh":
+                            token.TokenValueType = TokenType.Tanh;
+                            ops.Push(token);
+                            break;
+                        case "acos":
+                            token.TokenValueType = TokenType.Acos;
+                            ops.Push(token);
+                            break;
+                        case "asin":
+                            token.TokenValueType = TokenType.Asin;
+                            ops.Push(token);
+                            break;
+                        case "atan":
+                            token.TokenValueType = TokenType.Atan;
+                            ops.Push(token);
                             break;
                     }
                 }
             }
 
-            
             while (ops.Count != 0) // While there are still operator tokens in the stack:
             {
                 opstoken = (ReversePolishNotationToken)ops.Pop();
-                
+
                 if (opstoken.TokenValueType == TokenType.LeftParenthesis) // If the operator token on the top of the stack is a parenthesis
                 {
                     throw new Exception("Unbalanced parenthesis!"); // then there are mismatched parenthesis.
@@ -312,6 +375,9 @@ namespace Programowanie2
                 token = (ReversePolishNotationToken)obj; // Read the next token from input.
                 switch (token.TokenValueType)
                 {
+                    case TokenType.Variable:
+                        result.Push(sVariableX);
+                        break;
                     case TokenType.Number:
                         // If the token is a value
                         // Push it onto the stack.
@@ -345,7 +411,7 @@ namespace Programowanie2
                         {
                             oper2 = (double)result.Pop();
                             oper1 = (double)result.Pop();
-                           
+
                             result.Push(oper1 - oper2);
                         }
                         else
@@ -371,7 +437,7 @@ namespace Programowanie2
                         {
                             oper2 = (double)result.Pop();
                             oper1 = (double)result.Pop();
-                        
+
                             result.Push(oper1 / oper2);
                         }
                         else
@@ -420,7 +486,7 @@ namespace Programowanie2
                         if (result.Count >= 1)
                         {
                             oper1 = (double)result.Pop();
-                            
+
                             result.Push(Math.Cos(oper1));
                         }
                         else
@@ -432,8 +498,128 @@ namespace Programowanie2
                         if (result.Count >= 1)
                         {
                             oper1 = (double)result.Pop();
-                            
+
                             result.Push(Math.Tan(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Abs:
+                        if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Abs(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Exp:
+                        if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Exp(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Log:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Log(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Sqrt:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Sqrt(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Cosh:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Cosh(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Sinh:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Sinh(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Tanh:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Tanh(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Acos:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Acos(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Asin:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Asin(oper1));
+                        }
+                        else
+                        {
+                            throw new Exception("Evaluation error!");
+                        }
+                        break;
+                    case TokenType.Atan:
+                    if (result.Count >= 1)
+                        {
+                            oper1 = (double)result.Pop();
+
+                            result.Push(Math.Atan(oper1));
                         }
                         else
                         {
@@ -505,6 +691,22 @@ namespace Programowanie2
                     break;
             }
             return result;
+        }
+
+    public static void CalculateRange(List<string> Range, double x, double xMin, double xMax, int n) //calculate range between xMin and xMax
+        {
+            System.Console.WriteLine("{0}", CalculateRange(Range, x));
+
+            double result = 0;
+            double length = (xMax - xMin) / (n - 1);
+            x = xMin;
+
+            for (int i = 0; i < n; i++)
+            {
+                result = CalculateRange(Range, x);
+                System.Console.WriteLine("{0} => {1}", String.Format("{0:0.##}", x), result);
+                x += length;
+            }
         }
     }
 }
