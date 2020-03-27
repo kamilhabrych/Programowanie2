@@ -13,7 +13,6 @@ namespace Programowanie2
             result = rpn.Evaluate();
 
             Console.WriteLine("Original:   {0}", rpn.OriginalExpression);
-            Console.WriteLine("Transition:   {0}", rpn.TransitionExpression);
             Console.WriteLine("Postfix:   {0}", rpn.PostfixExpression);
             Console.WriteLine("Result: {0}", result);
         }
