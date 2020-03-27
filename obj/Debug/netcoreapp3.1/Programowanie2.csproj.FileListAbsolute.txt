@@ -1,0 +1,10 @@
+/Users/kamilhabrych/Programowanie2/bin/Debug/netcoreapp3.1/Programowanie2.deps.json
+/Users/kamilhabrych/Programowanie2/bin/Debug/netcoreapp3.1/Programowanie2.runtimeconfig.json
+/Users/kamilhabrych/Programowanie2/bin/Debug/netcoreapp3.1/Programowanie2.runtimeconfig.dev.json
+/Users/kamilhabrych/Programowanie2/bin/Debug/netcoreapp3.1/Programowanie2.dll
+/Users/kamilhabrych/Programowanie2/bin/Debug/netcoreapp3.1/Programowanie2.pdb
+/Users/kamilhabrych/Programowanie2/obj/Debug/netcoreapp3.1/Programowanie2.csprojAssemblyReference.cache
+/Users/kamilhabrych/Programowanie2/obj/Debug/netcoreapp3.1/Programowanie2.AssemblyInfoInputs.cache
+/Users/kamilhabrych/Programowanie2/obj/Debug/netcoreapp3.1/Programowanie2.AssemblyInfo.cs
+/Users/kamilhabrych/Programowanie2/obj/Debug/netcoreapp3.1/Programowanie2.dll
+/Users/kamilhabrych/Programowanie2/obj/Debug/netcoreapp3.1/Programowanie2.pdb
