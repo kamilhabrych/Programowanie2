@@ -9,7 +9,7 @@ namespace Programowanie2
         {
             double result = 0.0;
             Programowanie2.ReversePolishNotation rpn = new Programowanie2.ReversePolishNotation();
-            rpn.Parse("exp(sin(x+2))-100");
+            rpn.Parse("sin(x^2+6/x)");
             result = rpn.Evaluate();
 
             Console.WriteLine("Original:   {0}", rpn.OriginalExpression);
